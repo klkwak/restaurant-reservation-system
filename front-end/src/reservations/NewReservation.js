@@ -20,6 +20,8 @@ function NewReservation() {
 
   const [formData, setFormData] = useState({ ...initialFormState });
 
+  const [errorMessage, setErrorMessage] = useState([]);
+
   const handleChange = (event) => {
     setFormData({
       ...formData,
@@ -39,7 +41,7 @@ function NewReservation() {
       .post(url, data)
       .then((response) => console.log(response))
       .catch((err) => {
-        console.error(err);
+        setErrorMessage([...errorMessage, err.message]);
       });
 
     history.push(`/dashboard/?date=${formData.reservation_date}`);
@@ -51,6 +53,13 @@ function NewReservation() {
 
   return (
     <div className="container">
+      {errorMessage.length > 0 && (
+        <div className="alert alert-danger">
+          {errorMessage.map((error) => (
+            <p>{error}</p>
+          ))}
+        </div>
+      )}
       <form onSubmit={handleFormSubmit}>
         <label htmlFor="first_name">
           <input
