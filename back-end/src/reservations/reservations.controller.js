@@ -21,9 +21,10 @@ async function list(req, res) {
 function peoplePropertyIsNumber(req, _, next) {
   if (typeof req.body.data.people === "number") next();
   else {
-    const error = new Error("people property must be a number");
-    error.status = 400;
-    throw error;
+    next({
+      status: 400,
+      message: "people property must be a number",
+    });
   }
 }
 
@@ -32,11 +33,10 @@ function reservationDateFormatted(req, _, next) {
   let stored = req.body.data.reservation_date.match(regEx) != null;
   if (stored) next();
   else {
-    const error = new Error(
-      `reservation_date must be in correct format: YYYY/MM/DD`
-    );
-    error.status = 400;
-    throw error;
+    next({
+      status: 400,
+      message: "reservation_date must be in correct format: YYYY/MM/DD",
+    });
   }
 }
 
@@ -49,12 +49,65 @@ function reservationTimeFormatted(req, _, next) {
   let stored3 = req.body.data.reservation_time.match(regEx3) != null;
   if (stored || stored2 || stored3) next();
   else {
-    const error = new Error(
-      `reservation_time must be in correct format: HH:MM:SS`
-    );
-    error.status = 400;
-    throw error;
+    next({
+      status: 400,
+      message: "reservation_time must be in correct format: HH:MM:SS",
+    });
   }
+}
+
+function formatAsDateTimeInstance(dateString, timeString) {
+  let dateParts = dateString.split("-");
+
+  dateParts = dateParts.map((part) => parseInt(part));
+
+  let timeParts = timeString.split(":");
+
+  timeParts = timeParts.map((part) => parseInt(part, 10));
+
+  return new Date(
+    dateParts[0],
+    dateParts[1] - 1,
+    dateParts[2],
+    timeParts[0],
+    timeParts[1],
+    0,
+    0
+  );
+}
+
+function reservationDateNotTuesday(req, _, next) {
+  const date = formatAsDateTimeInstance(
+    req.body.data.reservation_date,
+    req.body.data.reservation_time
+  );
+
+  if (date.getDay() === 2) {
+    next({
+      status: 400,
+      message: "the restaurant is closed on Tuesdays",
+    });
+  }
+
+  next();
+}
+
+function reservationDateNotInPast(req, _, next) {
+  const date = formatAsDateTimeInstance(
+    req.body.data.reservation_date,
+    req.body.data.reservation_time
+  ).getTime();
+
+  const today = new Date().getTime();
+
+  if (date < today) {
+    next({
+      status: 400,
+      message: "reservations cannot be made for past dates",
+    });
+  }
+
+  next();
 }
 
 async function create(req, res) {
@@ -69,6 +122,8 @@ module.exports = {
     peoplePropertyIsNumber,
     reservationDateFormatted,
     reservationTimeFormatted,
+    reservationDateNotTuesday,
+    reservationDateNotInPast,
     asyncErrorBoundary(create),
   ],
 };

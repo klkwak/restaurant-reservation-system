@@ -1,10 +1,8 @@
-// const service = require("../../../back-end/src/reservations/reservations.service");
-// const asyncErrorBoundary
-
 import React, { useState } from "react";
 import { today } from "../utils/date-time";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import ErrorAlert from "../layout/ErrorAlert";
 
 function NewReservation() {
   const history = useHistory();
@@ -20,31 +18,127 @@ function NewReservation() {
 
   const [formData, setFormData] = useState({ ...initialFormState });
 
-  const [errorMessage, setErrorMessage] = useState([]);
+  const [errorMessages, setErrorMessages] = useState([]);
 
-  const handleChange = (event) => {
+  // format the reservation date
+  const formatAsDateTimeInstance = () => {
+    let dateParts = formData.reservation_date.split("-");
+
+    dateParts = dateParts.map((part) => parseInt(part));
+
+    let timeParts = formData.reservation_time.split(":");
+
+    timeParts = timeParts.map((part) => parseInt(part, 10));
+
+    return new Date(
+      dateParts[0],
+      dateParts[1] - 1,
+      dateParts[2],
+      timeParts[0],
+      timeParts[1],
+      0,
+      0
+    );
+  };
+
+  // VALIDATION
+
+  const reservationDuringValidHours = () => {
+    const time = formData.reservation_time;
+
+    const hrs = parseInt(time.split(":")[0], 10);
+    const mins = parseInt(time.split(":")[1], 10);
+
+    // must be greater than 10:30
+    // must be less than 21:30
+
+    if (
+      hrs < 10 ||
+      (hrs === 10 && mins < 30) ||
+      hrs > 21 ||
+      (hrs === 21 && mins > 30)
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const reservationDateNotTuesday = () => {
+    const date = formatAsDateTimeInstance();
+
+    if (date.getDay() === 2) return false;
+
+    return true;
+  };
+
+  const reservationDateNotInPast = () => {
+    const date = formatAsDateTimeInstance().getTime();
+
+    const today = new Date().getTime();
+
+    if (date < today) return false;
+
+    return true;
+  };
+
+  const validateForm = () => {
+    const errorArr = [];
+
+    if (!reservationDateNotTuesday()) {
+      errorArr.push({
+        message:
+          "The restaurant is closed on Tuesdays, please choose another date!",
+      });
+    }
+    if (!reservationDateNotInPast()) {
+      errorArr.push({
+        message:
+          "Cannot choose a reservation date in the past. Only future reservations are allowed.",
+      });
+    }
+
+    if (!reservationDuringValidHours()) {
+      errorArr.push({
+        message: "Must make reservation between 10:30 AM and 9:30 PM.",
+      });
+    }
+
+    return errorArr;
+  };
+
+  // EVENT HANDLERS
+  const handleChange = ({ target }) => {
+    const value =
+      target.type === "number" ? Number(target.value) : target.value;
     setFormData({
       ...formData,
-      [event.target.name]: event.target.value,
+      [target.name]: value,
     });
   };
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    formData.people = Number(formData.people);
-    const url = "http://localhost:5000/reservations";
-    const data = {
-      data: formData,
-    };
 
-    axios
-      .post(url, data)
-      .then((response) => console.log(response))
-      .catch((err) => {
-        setErrorMessage([...errorMessage, err.message]);
-      });
+    const errors = validateForm();
 
-    history.push(`/dashboard/?date=${formData.reservation_date}`);
+    setErrorMessages(errors);
+
+    if (errors.length === 0) {
+      const url = "http://localhost:5000/reservations";
+      const data = {
+        data: formData,
+      };
+
+      axios
+        .post(url, data)
+        .then(() =>
+          history.push(`/dashboard/?date=${formData.reservation_date}`)
+        )
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   };
 
   const handleCancelButton = () => {
@@ -53,13 +147,9 @@ function NewReservation() {
 
   return (
     <div className="container">
-      {errorMessage.length > 0 && (
-        <div className="alert alert-danger">
-          {errorMessage.map((error) => (
-            <p>{error}</p>
-          ))}
-        </div>
-      )}
+      {errorMessages.map((error, index) => (
+        <ErrorAlert key={index} error={error} />
+      ))}
       <form onSubmit={handleFormSubmit}>
         <label htmlFor="first_name">
           <input
@@ -133,7 +223,6 @@ function NewReservation() {
             Cancel
           </button>
         </div>
-        <div className="errors"></div>
       </form>
     </div>
   );
