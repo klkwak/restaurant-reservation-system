@@ -16,7 +16,7 @@ function list(reservation_date) {
 }
 
 function create(reservation) {
-  return knex("reservations")
+  return knex(tableName)
     .insert(reservation)
     .returning("*")
     .then((createdRecords) => createdRecords[0]);
