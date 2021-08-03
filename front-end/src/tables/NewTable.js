@@ -2,9 +2,6 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
-// TO DO:
-// submit button will save the new table and display /dashboard page
-
 function NewTable() {
   const history = useHistory();
 

@@ -1,16 +1,8 @@
 const knex = require("../db/connection");
 const tableName = "tables";
 
-// tables only has table_name and capacity
-
-function list(reservation_date) {
-  // if (!reservation_date) {
-  //   return knex(tableName)
-  //     .select("*")
-  //     .orderBy("reservation")
-  // } else {
-  //   return knex(tableName)
-  // }
+function list() {
+  return knex(tableName).select("*").orderBy("table_name", "asc");
 }
 
 function create(table) {
@@ -20,7 +12,15 @@ function create(table) {
     .then((createdRecords) => createdRecords[0]);
 }
 
+function update(table_id, reservation_id) {
+  return knex(tableName)
+    .update({ reservation_id })
+    .where({ table_id })
+    .then((updatedRecords) => updatedRecords[0]);
+}
+
 module.exports = {
   list,
   create,
+  update,
 };

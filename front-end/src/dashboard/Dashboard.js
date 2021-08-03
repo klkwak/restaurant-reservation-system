@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { listReservations } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
+import { listReservations, listTables } from "../utils/api";
 import { today, next, previous } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
+import ReservationItem from "./ReservationItem";
+import TableItem from "./TableItem";
+import ErrorAlert from "../layout/ErrorAlert";
 
 /**
  * Defines the dashboard page.
@@ -25,6 +27,8 @@ function Dashboard() {
   const [reservationsError, setReservationsError] = useState(null);
   const [reservation_date, setReservationDate] = useState(date);
 
+  const [tables, setTables] = useState([]);
+
   useEffect(loadDashboard, [reservation_date]);
 
   function loadDashboard() {
@@ -33,19 +37,9 @@ function Dashboard() {
     listReservations({ date: reservation_date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+    listTables(abortController.signal).then(setTables);
     return () => abortController.abort();
   }
-
-  const mapped = reservations.map((reservation) => (
-    <div key={reservation.reservation_id}>
-      <h2>
-        {reservation.first_name} {reservation.last_name}
-      </h2>
-      <h4>Phone Number: {reservation.mobile_number}</h4>
-      <h4>Reservation Time: {reservation.reservation_time}</h4>
-      <h4>Number of people: {reservation.people}</h4>
-    </div>
-  ));
 
   const handleNextButton = () => {
     setReservationDate(next(reservation_date));
@@ -64,14 +58,34 @@ function Dashboard() {
 
   return (
     <main>
-      <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date</h4>
+      <h1 className="text-center">Dashboard</h1>
+      <div className="d-flex justify-content-between">
+        <div>
+          <div className="d-md-flex justify-content-center mb-3">
+            <h3 className="mb-0">Reservations for {reservation_date}</h3>
+          </div>
+          <ErrorAlert error={reservationsError} />
+          <ul className="list-group my-2">
+            {reservations.map((reservation) => (
+              <ReservationItem
+                key={reservation.reservation_id}
+                reservation={reservation}
+              />
+            ))}
+          </ul>
+        </div>
+        <div>
+          <div className="d-md-flex justify-content-center mb-3">
+            <h3 className="mb-0">Tables</h3>
+          </div>
+          <ul className="list-group my-2">
+            {tables.map((table) => (
+              <TableItem key={table.table_id} table={table} />
+            ))}
+          </ul>
+        </div>
       </div>
-      <ErrorAlert error={reservationsError} />
-      {/* {JSON.stringify(reservations)} */}
-      {mapped}
-      <div className="controls">
+      <div className="d-flex justify-content-center">
         <button type="button" onClick={handleNextButton}>
           Next
         </button>

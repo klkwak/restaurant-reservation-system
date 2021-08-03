@@ -18,6 +18,28 @@ async function list(req, res) {
   res.json({ data });
 }
 
+async function reservationExists(req, res, next) {
+  const reservationId = parseInt(req.params.reservationId);
+
+  const reservation = await service.read(reservationId);
+
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  } else {
+    next({
+      status: 400,
+      message: "reservation does not exist",
+    });
+  }
+}
+
+function read(req, res) {
+  const { reservation: data } = res.locals;
+
+  res.json({ data });
+}
+
 function peoplePropertyIsNumber(req, _, next) {
   if (typeof req.body.data.people === "number") next();
   else {
@@ -103,7 +125,28 @@ function reservationDateNotInPast(req, _, next) {
   if (date < today) {
     next({
       status: 400,
-      message: "reservations cannot be made for past dates",
+      message: "reservations must be made only for future dates",
+    });
+  }
+
+  next();
+}
+
+function reservationDuringValidHours(req, _, next) {
+  const time = req.body.data.reservation_time;
+
+  const hrs = parseInt(time.split(":")[0], 10);
+  const mins = parseInt(time.split(":")[1], 10);
+
+  if (
+    hrs < 10 ||
+    (hrs === 10 && mins < 30) ||
+    hrs > 21 ||
+    (hrs === 21 && mins > 30)
+  ) {
+    next({
+      status: 400,
+      message: "reservations must be made between 10:30 AM and 9:30 PM",
     });
   }
 
@@ -117,6 +160,7 @@ async function create(req, res) {
 
 module.exports = {
   list,
+  read: [asyncErrorBoundary(reservationExists), read],
   create: [
     hasRequiredProperties,
     peoplePropertyIsNumber,
@@ -124,6 +168,7 @@ module.exports = {
     reservationTimeFormatted,
     reservationDateNotTuesday,
     reservationDateNotInPast,
+    reservationDuringValidHours,
     asyncErrorBoundary(create),
   ],
 };
