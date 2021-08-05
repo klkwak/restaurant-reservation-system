@@ -78,6 +78,12 @@ export async function listTables(signal) {
   return await fetchJson(url, { headers, signal }, []);
 }
 
+// export async function readTable(table_id) {
+//   const url = new URL(`${API_BASE_URL}/tables/${table_id}`);
+
+//   return await fetchJson(url, { headers }, []);
+// }
+
 export async function updateTableAssignment(table_id, data) {
   const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
 

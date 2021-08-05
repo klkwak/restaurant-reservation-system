@@ -12,11 +12,11 @@ function SeatTable() {
 
   const history = useHistory();
 
-  const [tableId, setTableId] = useState("");
-
   const [tables, setTables] = useState([]);
 
   const [reservationSize, setReservationSize] = useState(null);
+
+  const [tableId, setTableId] = useState("");
 
   const [errorMessages, setErrorMessages] = useState([]);
 
@@ -38,7 +38,10 @@ function SeatTable() {
   ));
 
   const partyNotLargerThanTableCapacity = (tableId) => {
-    if (reservationSize > parseInt(tableId)) return false;
+    const selectedTable = tables.find(
+      (table) => table.table_id === parseInt(tableId)
+    );
+    if (reservationSize > selectedTable.capacity) return false;
     return true;
   };
 

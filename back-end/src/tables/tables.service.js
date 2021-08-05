@@ -5,6 +5,10 @@ function list() {
   return knex(tableName).select("*").orderBy("table_name", "asc");
 }
 
+function read(table_id) {
+  return knex(tableName).select("*").where({ table_id }).first();
+}
+
 function create(table) {
   return knex(tableName)
     .insert(table)
@@ -21,6 +25,7 @@ function update(table_id, reservation_id) {
 
 module.exports = {
   list,
+  read,
   create,
   update,
 };
