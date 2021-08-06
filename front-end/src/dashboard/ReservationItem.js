@@ -1,34 +1,7 @@
-import React, { useState } from "react";
-import { updateReservationStatus } from "../utils/api";
+import React from "react";
 
 function ReservationItem({ reservation }) {
-  // let {
-  //   reservation_time,
-  //   people,
-  //   first_name,
-  //   last_name,
-  //   mobile_number,
-  //   reservation_id,
-  //   status,
-  // } = reservation;
-
-  // const [status, setStatus] = useState(reservation.status);
-
-  let { status } = reservation;
-
-  const handleSeatButton = () => {
-    const abortController = new AbortController();
-
-    const data = { status: "seated" };
-
-    updateReservationStatus(
-      reservation.reservation_id,
-      data,
-      abortController.signal
-    );
-
-    return () => abortController.abort();
-  };
+  if (reservation.status === "finished") return <></>;
 
   return (
     <li className="list-group-item">
@@ -50,15 +23,14 @@ function ReservationItem({ reservation }) {
         className="d-flex justify-content-center my-4 border rounded"
         data-reservation-id-status={reservation.reservation_id}
       >
-        Status: {status}
+        Status: {reservation.status}
       </h4>
-      {status === "booked" && (
+      {reservation.status === "booked" && (
         <div className="d-flex justify-content-center my-2">
           <a
             href={`/reservations/${reservation.reservation_id}/seat`}
             className="btn btn-info"
             role="button"
-            onClick={handleSeatButton}
           >
             Seat
           </a>

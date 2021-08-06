@@ -4,6 +4,7 @@ import {
   listTables,
   readReservation,
   updateTableAssignment,
+  updateReservationStatus,
 } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 
@@ -69,9 +70,21 @@ function SeatTable() {
     setErrorMessages(errors);
 
     if (errors.length === 0) {
-      const data = { reservation_id };
+      const reservationId = { reservation_id };
 
-      updateTableAssignment(tableId, data)
+      const reservationStatus = {
+        status: "seated",
+      };
+
+      // updateTableAssignment(tableId, reservationId)
+      //   .catch((err) => console.log(err));
+
+      // updateReservationStatus(reservation_id, reservationStatus)
+      //   .then(() => history.push("/dashboard"))
+      //   .catch((err) => console.log(err));
+
+      updateTableAssignment(tableId, reservationId)
+        .then(() => updateReservationStatus(reservation_id, reservationStatus))
         .then(() => history.push("/dashboard"))
         .catch((err) => console.log(err));
     }

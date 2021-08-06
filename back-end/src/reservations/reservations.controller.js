@@ -19,7 +19,7 @@ async function list(req, res) {
 }
 
 async function reservationExists(req, res, next) {
-  const reservationId = parseInt(req.params.reservationId);
+  const reservationId = parseInt(req.params.reservation_id);
 
   const reservation = await service.read(reservationId);
 
@@ -158,6 +158,29 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+function hasRequiredStatus(req, res, next) {
+  const { status } = req.body.data;
+
+  if (!status) {
+    next({
+      status: 400,
+      message: "status is missing",
+    });
+  }
+
+  res.locals.status = status;
+
+  next();
+}
+
+async function update(req, res) {
+  const reservation_id = parseInt(req.params.reservation_id);
+
+  const data = await service.update(reservation_id, res.locals.status);
+
+  res.status(200).json({ data });
+}
+
 module.exports = {
   list,
   read: [asyncErrorBoundary(reservationExists), read],
@@ -170,5 +193,10 @@ module.exports = {
     reservationDateNotInPast,
     reservationDuringValidHours,
     asyncErrorBoundary(create),
+  ],
+  update: [
+    asyncErrorBoundary(reservationExists),
+    hasRequiredStatus,
+    asyncErrorBoundary(update),
   ],
 };

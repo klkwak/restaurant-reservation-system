@@ -115,7 +115,7 @@ export async function updateReservationStatus(reservation_id, data, signal) {
 
   return await fetchJson(
     url,
-    { headers, method: "PUT", body: JSON.stringify({ data }) },
+    { headers, method: "PUT", body: JSON.stringify({ data }), signal },
     []
   );
 }

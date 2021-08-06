@@ -4,6 +4,7 @@ import {
   listReservations,
   listTables,
   deleteTableAssignment,
+  updateReservationStatus,
 } from "../utils/api";
 import { today, next, previous } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
@@ -30,7 +31,6 @@ function Dashboard() {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [reservation_date, setReservationDate] = useState(date);
-
   const [tables, setTables] = useState([]);
 
   useEffect(loadDashboard, [reservation_date]);
@@ -70,6 +70,21 @@ function Dashboard() {
       deleteTableAssignment(table.table_id, abortController.signal)
         .then(() => listTables(abortController.signal))
         .then(setTables);
+
+      const reservationStatus = {
+        status: "finished",
+      };
+
+      updateReservationStatus(
+        table.reservation_id,
+        reservationStatus,
+        abortController.signal
+      )
+        .then(() =>
+          listReservations({ date: reservation_date }, abortController.signal)
+        )
+        .then(setReservations)
+        .catch(setReservationsError);
     }
     return () => abortController.abort();
   };

@@ -10,17 +10,6 @@ async function list(req, res) {
   res.json({ data });
 }
 
-// async function read(req, res) {
-//   const table_id = parseInt(req.params.table_id);
-
-//   const data = await service.read(table_id);
-
-//   res.locals.tableCapacity = data.capacity;
-//   res.locals.tableStatus = data.reservation_id;
-
-//   res.json({ data });
-// }
-
 function tableNameMoreThanOneCharacter(req, res, next) {
   if (req.body.data.table_name.length < 2) {
     next({
@@ -165,9 +154,9 @@ module.exports = {
   update: [
     hasDataProperty,
     hasRequiredReservationId,
-    tableExists,
+    asyncErrorBoundary(tableExists),
     tableNotOccupied,
-    reservationExists,
+    asyncErrorBoundary(reservationExists),
     reservationNotLargerThanTableCapacity,
     asyncErrorBoundary(update),
   ],
