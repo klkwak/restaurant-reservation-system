@@ -137,6 +137,23 @@ async function update(req, res) {
   res.status(200).json({ data });
 }
 
+function tableOccupied(req, res, next) {
+  if (!res.locals.table.reservation_id) {
+    next({
+      status: 400,
+      message: "table is not occupied",
+    });
+  }
+
+  next();
+}
+
+async function destroy(req, res) {
+  const data = await service.destroy(parseInt(res.locals.table.table_id));
+
+  res.status(200).json({ data });
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   read: [asyncErrorBoundary(tableExists), read],
@@ -154,4 +171,5 @@ module.exports = {
     reservationNotLargerThanTableCapacity,
     asyncErrorBoundary(update),
   ],
+  delete: [tableExists, tableOccupied, asyncErrorBoundary(destroy)],
 };

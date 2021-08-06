@@ -84,14 +84,28 @@ export async function listTables(signal) {
 //   return await fetchJson(url, { headers }, []);
 // }
 
+export async function createTable(data) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+
+  return await fetchJson(
+    url,
+    { headers, method: "POST", body: JSON.stringify({ data }) },
+    []
+  );
+}
+
 export async function updateTableAssignment(table_id, data) {
   const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
-
-  console.log(data);
 
   return await fetchJson(
     url,
     { headers, method: "PUT", body: JSON.stringify({ data }) },
     []
   );
+}
+
+export async function deleteTableAssignment(table_id, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
+
+  return await fetchJson(url, { headers, method: "DELETE", signal }, []);
 }

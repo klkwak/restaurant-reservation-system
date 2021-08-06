@@ -1,6 +1,6 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { createTable } from "../utils/api";
 
 function NewTable() {
   const history = useHistory();
@@ -22,17 +22,9 @@ function NewTable() {
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
-    const url = "http://localhost:5000/tables";
-    const data = {
-      data: formData,
-    };
-
-    axios
-      .post(url, data)
+    createTable(formData)
       .then(() => history.push("/dashboard"))
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch((err) => console.error(err));
   };
 
   const handleCancelButton = () => {

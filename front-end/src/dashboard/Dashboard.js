@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { listReservations, listTables } from "../utils/api";
+import {
+  listReservations,
+  listTables,
+  deleteTableAssignment,
+} from "../utils/api";
 import { today, next, previous } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
 import ReservationItem from "./ReservationItem";
@@ -56,6 +60,20 @@ function Dashboard() {
     history.push(`/dashboard`);
   };
 
+  const handleFinishButton = (table) => {
+    const abortController = new AbortController();
+    if (
+      window.confirm(
+        "Is this table ready to seat new guests? This cannot be undone."
+      )
+    ) {
+      deleteTableAssignment(table.table_id, abortController.signal)
+        .then(() => listTables(abortController.signal))
+        .then(setTables);
+    }
+    return () => abortController.abort();
+  };
+
   return (
     <main>
       <h1 className="text-center">Dashboard</h1>
@@ -80,7 +98,11 @@ function Dashboard() {
           </div>
           <ul className="list-group my-2">
             {tables.map((table) => (
-              <TableItem key={table.table_id} table={table} />
+              <TableItem
+                key={table.table_id}
+                table={table}
+                handleFinishButton={handleFinishButton}
+              />
             ))}
           </ul>
         </div>
