@@ -14,7 +14,16 @@ const hasRequiredProperties = hasProperties(
  * List handler for reservation resources
  */
 async function list(req, res) {
-  const data = await service.list(req.query.date);
+  console.log(req.query);
+
+  let data;
+
+  if (req.query.date) {
+    data = await service.list(req.query.date);
+  } else if (req.query.mobile_phone) {
+    data = await service.search(req.query.mobile_phone);
+  }
+  // const data = await service.list(req.query.date);
   res.json({ data });
 }
 
@@ -153,12 +162,9 @@ function reservationDuringValidHours(req, _, next) {
   next();
 }
 
-async function create(req, res) {
-  const data = await service.create(req.body.data);
-  res.status(201).json({ data });
-}
-
 function hasRequiredStatus(req, res, next) {
+  console.log(req.body.data);
+
   const { status } = req.body.data;
 
   if (!status) {
@@ -171,6 +177,24 @@ function hasRequiredStatus(req, res, next) {
   res.locals.status = status;
 
   next();
+}
+
+function statusIsBooked(req, res, next) {
+  console.log(res.locals.status);
+
+  if (res.locals.status !== "booked") {
+    next({
+      status: 400,
+      message: "status must be booked",
+    });
+  }
+
+  next();
+}
+
+async function create(req, res) {
+  const data = await service.create(req.body.data);
+  res.status(201).json({ data });
 }
 
 async function update(req, res) {
@@ -192,6 +216,8 @@ module.exports = {
     reservationDateNotTuesday,
     reservationDateNotInPast,
     reservationDuringValidHours,
+    hasRequiredStatus,
+    statusIsBooked,
     asyncErrorBoundary(create),
   ],
   update: [

@@ -14,6 +14,7 @@ function NewReservation() {
     reservation_date: today(),
     reservation_time: "00:00",
     people: 1,
+    status: "booked",
   };
 
   const [formData, setFormData] = useState({ ...initialFormState });
@@ -125,9 +126,11 @@ function NewReservation() {
     setErrorMessages(errors);
 
     if (errors.length === 0) {
+      // setFormData({ ...formData, status: "booked" });
+
       const url = "http://localhost:5000/reservations";
       const data = {
-        data: formData,
+        data: { ...formData, status: "booked" },
       };
 
       axios
