@@ -89,6 +89,31 @@ function Dashboard() {
     return () => abortController.abort();
   };
 
+  const handleCancelButton = (reservation) => {
+    const abortController = new AbortController();
+    if (
+      window.confirm(
+        "Do you want to cancel this reservation? This cannot be undone."
+      )
+    ) {
+      const reservationStatus = {
+        status: "cancelled",
+      };
+
+      updateReservationStatus(
+        reservation.reservation_id,
+        reservationStatus,
+        abortController.signal
+      )
+        .then(() =>
+          listReservations({ date: reservation_date }, abortController.signal)
+        )
+        .then(setReservations)
+        .catch(setReservationsError);
+    }
+    return () => abortController.abort();
+  };
+
   return (
     <main>
       <h1 className="text-center">Dashboard</h1>
@@ -103,6 +128,7 @@ function Dashboard() {
               <ReservationItem
                 key={reservation.reservation_id}
                 reservation={reservation}
+                handleCancelButton={handleCancelButton}
               />
             ))}
           </ul>

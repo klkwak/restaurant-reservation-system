@@ -181,12 +181,12 @@ async function create(req, res) {
 function statusIsKnown(req, res, next) {
   const { status } = req.body.data;
 
-  const knownStatuses = ["booked", "seated", "finished"];
+  const knownStatuses = ["booked", "seated", "finished", "cancelled"];
 
   if (!knownStatuses.includes(status)) {
     next({
       status: 400,
-      message: `status ${status} is unknown. must be booked, seated or finished`,
+      message: `status ${status} is unknown. must be booked, seated, finished or cancelled`,
     });
   }
 

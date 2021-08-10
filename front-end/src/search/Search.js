@@ -8,10 +8,9 @@ function Search() {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    console.log("finding", phoneNumber);
 
     const abortController = new AbortController();
-    // display No reservations found if there are no records found after clicking the Find button.
+
     listReservations(
       { mobile_number: phoneNumber },
       abortController.signal

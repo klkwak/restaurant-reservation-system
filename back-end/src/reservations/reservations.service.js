@@ -12,7 +12,8 @@ function list(reservation_date) {
       .select("*")
       .orderBy("reservation_time", "asc")
       .where("reservation_date", reservation_date)
-      .whereNot("status", "finished");
+      .whereNot("status", "finished")
+      .whereNot("status", "cancelled");
   }
 }
 

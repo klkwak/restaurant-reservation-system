@@ -70,7 +70,9 @@ export async function listReservations(params, signal) {
 export async function readReservation(reservation_id, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`);
 
-  return await fetchJson(url, { headers, signal }, []);
+  return await fetchJson(url, { headers, signal }, [])
+    .then(formatReservationDate)
+    .then(formatReservationTime);
 }
 
 export async function createReservation(data) {
@@ -88,12 +90,6 @@ export async function listTables(signal) {
 
   return await fetchJson(url, { headers, signal }, []);
 }
-
-// export async function readTable(table_id) {
-//   const url = new URL(`${API_BASE_URL}/tables/${table_id}`);
-
-//   return await fetchJson(url, { headers }, []);
-// }
 
 export async function createTable(data) {
   const url = new URL(`${API_BASE_URL}/tables`);

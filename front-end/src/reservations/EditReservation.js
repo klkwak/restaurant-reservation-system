@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { today } from "../utils/date-time";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
-import { createReservation } from "../utils/api";
+import { readReservation } from "../utils/api";
 
-function NewReservation() {
+function EditReservation() {
+  const { reservation_id } = useParams();
+
   const history = useHistory();
 
   const initialFormState = {
@@ -19,6 +21,14 @@ function NewReservation() {
   const [formData, setFormData] = useState({ ...initialFormState });
 
   const [errorMessages, setErrorMessages] = useState([]);
+
+  useEffect(loadReservationFormData, [reservation_id]);
+
+  function loadReservationFormData() {
+    const abortController = new AbortController();
+    readReservation(reservation_id, abortController.signal).then(setFormData);
+    return () => abortController.abort();
+  }
 
   // format the reservation date
   const formatAsDateTimeInstance = () => {
@@ -121,15 +131,20 @@ function NewReservation() {
 
     setErrorMessages(errors);
 
-    if (errors.length === 0) {
-      createReservation(formData)
-        .then(() =>
-          history.push(`/dashboard/?date=${formData.reservation_date}`)
-        )
-        .catch((err) => {
-          console.error(err);
-        });
-    }
+    console.log("hi");
+
+    // onsole.log(reservationData);
+    // console.log(initialFormState);
+
+    // if (errors.length === 0) {
+    //   createReservation(formData)
+    //     .then(() =>
+    //       history.push(`/dashboard/?date=${formData.reservation_date}`)
+    //     )
+    //     .catch((err) => {
+    //       console.error(err);
+    //     });
+    // }
   };
 
   const handleCancelButton = () => {
@@ -219,4 +234,4 @@ function NewReservation() {
   );
 }
 
-export default NewReservation;
+export default EditReservation;
