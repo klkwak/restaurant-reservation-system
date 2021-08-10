@@ -14,8 +14,6 @@ const hasRequiredProperties = hasProperties(
  * List handler for reservation resources
  */
 async function list(req, res) {
-  console.log(req.query);
-
   let data;
 
   if (req.query.date) {
@@ -23,7 +21,7 @@ async function list(req, res) {
   } else if (req.query.mobile_phone) {
     data = await service.search(req.query.mobile_phone);
   }
-  // const data = await service.list(req.query.date);
+
   res.json({ data });
 }
 
@@ -37,8 +35,8 @@ async function reservationExists(req, res, next) {
     return next();
   } else {
     next({
-      status: 400,
-      message: "reservation does not exist",
+      status: 404,
+      message: `reservation ${reservationId} does not exist`,
     });
   }
 }
@@ -162,30 +160,13 @@ function reservationDuringValidHours(req, _, next) {
   next();
 }
 
-function hasRequiredStatus(req, res, next) {
-  console.log(req.body.data);
-
+function statusIsNotSeatedOrFinished(req, res, next) {
   const { status } = req.body.data;
 
-  if (!status) {
+  if (status && status !== "booked") {
     next({
       status: 400,
-      message: "status is missing",
-    });
-  }
-
-  res.locals.status = status;
-
-  next();
-}
-
-function statusIsBooked(req, res, next) {
-  console.log(res.locals.status);
-
-  if (res.locals.status !== "booked") {
-    next({
-      status: 400,
-      message: "status must be booked",
+      message: `status cannot be ${status}`,
     });
   }
 
@@ -197,10 +178,39 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
-async function update(req, res) {
-  const reservation_id = parseInt(req.params.reservation_id);
+function statusIsKnown(req, res, next) {
+  const { status } = req.body.data;
 
-  const data = await service.update(reservation_id, res.locals.status);
+  const knownStatuses = ["booked", "seated", "finished"];
+
+  if (!knownStatuses.includes(status)) {
+    next({
+      status: 400,
+      message: `status ${status} is unknown. must be booked, seated or finished`,
+    });
+  }
+
+  res.locals.status = status;
+  next();
+}
+
+function reservationStatusIsNotAlreadyFinished(req, res, next) {
+  if (res.locals.reservation.status === "finished") {
+    next({
+      status: 400,
+      message: "finished reservations cannot be updated",
+    });
+  }
+
+  next();
+}
+
+async function update(req, res) {
+  const { reservation_id } = res.locals.reservation;
+
+  const { status } = res.locals;
+
+  const data = await service.update(reservation_id, status);
 
   res.status(200).json({ data });
 }
@@ -216,13 +226,13 @@ module.exports = {
     reservationDateNotTuesday,
     reservationDateNotInPast,
     reservationDuringValidHours,
-    hasRequiredStatus,
-    statusIsBooked,
+    statusIsNotSeatedOrFinished,
     asyncErrorBoundary(create),
   ],
   update: [
     asyncErrorBoundary(reservationExists),
-    hasRequiredStatus,
+    statusIsKnown,
+    reservationStatusIsNotAlreadyFinished,
     asyncErrorBoundary(update),
   ],
 };

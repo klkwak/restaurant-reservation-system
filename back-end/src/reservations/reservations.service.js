@@ -11,7 +11,8 @@ function list(reservation_date) {
     return knex(tableName)
       .select("*")
       .orderBy("reservation_time", "asc")
-      .where("reservation_date", reservation_date);
+      .where("reservation_date", reservation_date)
+      .whereNot("status", "finished");
   }
 }
 
@@ -39,6 +40,7 @@ function update(reservation_id, status) {
   return knex(tableName)
     .update({ status })
     .where({ reservation_id })
+    .returning("*")
     .then((updatedRecords) => updatedRecords[0]);
 }
 

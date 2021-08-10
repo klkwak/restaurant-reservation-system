@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { today } from "../utils/date-time";
-import axios from "axios";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
+import { createReservation } from "../utils/api";
 
 function NewReservation() {
   const history = useHistory();
@@ -126,15 +126,7 @@ function NewReservation() {
     setErrorMessages(errors);
 
     if (errors.length === 0) {
-      // setFormData({ ...formData, status: "booked" });
-
-      const url = "http://localhost:5000/reservations";
-      const data = {
-        data: { ...formData, status: "booked" },
-      };
-
-      axios
-        .post(url, data)
+      createReservation(formData)
         .then(() =>
           history.push(`/dashboard/?date=${formData.reservation_date}`)
         )
