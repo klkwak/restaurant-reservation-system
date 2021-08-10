@@ -13,7 +13,7 @@ function Search() {
     const abortController = new AbortController();
     // display No reservations found if there are no records found after clicking the Find button.
     listReservations(
-      { mobile_phone: phoneNumber },
+      { mobile_number: phoneNumber },
       abortController.signal
     ).then(setReservations);
     return () => abortController.abort();

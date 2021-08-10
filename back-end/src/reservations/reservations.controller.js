@@ -18,8 +18,8 @@ async function list(req, res) {
 
   if (req.query.date) {
     data = await service.list(req.query.date);
-  } else if (req.query.mobile_phone) {
-    data = await service.search(req.query.mobile_phone);
+  } else if (req.query.mobile_number) {
+    data = await service.search(req.query.mobile_number);
   }
 
   res.json({ data });
