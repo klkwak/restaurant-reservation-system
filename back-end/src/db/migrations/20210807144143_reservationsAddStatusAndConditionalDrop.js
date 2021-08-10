@@ -1,3 +1,5 @@
+const { dropColumn } = require("../dbHelper");
+
 exports.up = function (knex) {
   return knex.schema.table("reservations", (table) => {
     table.string("status").notNullable().defaultTo("booked");
@@ -5,7 +7,5 @@ exports.up = function (knex) {
 };
 
 exports.down = function (knex) {
-  return knex.schema.table("reservations", (table) => {
-    table.dropColumn("status");
-  });
+  return dropColumn(knex, "reservations", "status");
 };

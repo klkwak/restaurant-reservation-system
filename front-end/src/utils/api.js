@@ -61,6 +61,8 @@ export async function listReservations(params, signal) {
   Object.entries(params).forEach(([key, value]) =>
     url.searchParams.append(key, value.toString())
   );
+  console.log(params);
+  console.log({ url });
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
@@ -70,6 +72,16 @@ export async function readReservation(reservation_id, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`);
 
   return await fetchJson(url, { headers, signal }, []);
+}
+
+export async function createReservation(data) {
+  const url = new URL(`${API_BASE_URL}/reservations`);
+
+  return await fetchJson(
+    url,
+    { headers, method: "POST", body: JSON.stringify({ data }) },
+    []
+  );
 }
 
 export async function listTables(signal) {

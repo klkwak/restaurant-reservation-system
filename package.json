@@ -51,6 +51,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "knex": "^0.95.9",
+    "pg": "^8.7.1",
     "query-string": "^7.0.1"
   }
 }
