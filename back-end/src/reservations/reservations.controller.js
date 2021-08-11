@@ -205,12 +205,31 @@ function reservationStatusIsNotAlreadyFinished(req, res, next) {
   next();
 }
 
-async function update(req, res) {
+async function updateStatus(req, res) {
   const { reservation_id } = res.locals.reservation;
 
   const { status } = res.locals;
 
   const data = await service.update(reservation_id, status);
+
+  res.status(200).json({ data });
+}
+
+function reservationStatusIsBooked(req, res, next) {
+  if (res.locals.reservation.status !== "booked") {
+    next({
+      status: 400,
+      message: "only reservations with a status of booked can be edited",
+    });
+  }
+
+  next();
+}
+
+async function update(req, res) {
+  const { reservation_id } = res.locals.reservation;
+
+  const data = await service.update(reservation_id, req.body.data);
 
   res.status(200).json({ data });
 }
@@ -229,10 +248,22 @@ module.exports = {
     statusIsNotSeatedOrFinished,
     asyncErrorBoundary(create),
   ],
-  update: [
+  updateStatus: [
     asyncErrorBoundary(reservationExists),
     statusIsKnown,
     reservationStatusIsNotAlreadyFinished,
+    asyncErrorBoundary(updateStatus),
+  ],
+  update: [
+    asyncErrorBoundary(reservationExists),
+    hasRequiredProperties,
+    peoplePropertyIsNumber,
+    reservationDateFormatted,
+    reservationTimeFormatted,
+    reservationDateNotTuesday,
+    reservationDateNotInPast,
+    reservationDuringValidHours,
+    reservationStatusIsBooked,
     asyncErrorBoundary(update),
   ],
 };

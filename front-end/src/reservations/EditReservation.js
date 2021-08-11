@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { today } from "../utils/date-time";
 import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
-import { readReservation } from "../utils/api";
+import { readReservation, updateReservation } from "../utils/api";
 
 function EditReservation() {
   const { reservation_id } = useParams();
@@ -131,20 +131,17 @@ function EditReservation() {
 
     setErrorMessages(errors);
 
-    console.log("hi");
+    // need to reload the dashboard reservations upon navigating back to it after updating
 
-    // onsole.log(reservationData);
-    // console.log(initialFormState);
-
-    // if (errors.length === 0) {
-    //   createReservation(formData)
-    //     .then(() =>
-    //       history.push(`/dashboard/?date=${formData.reservation_date}`)
-    //     )
-    //     .catch((err) => {
-    //       console.error(err);
-    //     });
-    // }
+    if (errors.length === 0) {
+      updateReservation(reservation_id, formData)
+        .then(() =>
+          history.push(`/dashboard/?date=${formData.reservation_date}`)
+        )
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   };
 
   const handleCancelButton = () => {
