@@ -67,9 +67,9 @@ function Dashboard() {
         "Is this table ready to seat new guests? This cannot be undone."
       )
     ) {
-      const reservationStatus = {
-        status: "finished",
-      };
+      // const reservationStatus = {
+      //   status: "finished",
+      // };
 
       deleteTableAssignment(table.table_id, abortController.signal)
         .then(() => listTables(abortController.signal))
