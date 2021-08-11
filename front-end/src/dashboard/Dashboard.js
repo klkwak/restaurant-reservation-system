@@ -67,24 +67,40 @@ function Dashboard() {
         "Is this table ready to seat new guests? This cannot be undone."
       )
     ) {
-      deleteTableAssignment(table.table_id, abortController.signal)
-        .then(() => listTables(abortController.signal))
-        .then(setTables);
-
       const reservationStatus = {
         status: "finished",
       };
 
-      updateReservationStatus(
-        table.reservation_id,
-        reservationStatus,
-        abortController.signal
-      )
+      deleteTableAssignment(table.table_id, abortController.signal)
+        .then(() => listTables(abortController.signal))
+        .then(setTables)
+        // .then(() =>
+        //   updateReservationStatus(
+        //     table.reservation_id,
+        //     reservationStatus,
+        //     abortController.signal
+        //   )
+        // )
         .then(() =>
           listReservations({ date: reservation_date }, abortController.signal)
         )
         .then(setReservations)
         .catch(setReservationsError);
+
+      // const reservationStatus = {
+      //   status: "finished",
+      // };
+
+      // updateReservationStatus(
+      //   table.reservation_id,
+      //   reservationStatus,
+      //   abortController.signal
+      // )
+      //   .then(() =>
+      //     listReservations({ date: reservation_date }, abortController.signal)
+      //   )
+      //   .then(setReservations)
+      //   .catch(setReservationsError);
     }
     return () => abortController.abort();
   };
