@@ -11,6 +11,7 @@ import useQuery from "../utils/useQuery";
 import ReservationItem from "./ReservationItem";
 import TableItem from "./TableItem";
 import ErrorAlert from "../layout/ErrorAlert";
+import "./Dashboard.css";
 
 /**
  * Defines the dashboard page.
@@ -67,40 +68,14 @@ function Dashboard() {
         "Is this table ready to seat new guests? This cannot be undone."
       )
     ) {
-      // const reservationStatus = {
-      //   status: "finished",
-      // };
-
       deleteTableAssignment(table.table_id, abortController.signal)
         .then(() => listTables(abortController.signal))
         .then(setTables)
-        // .then(() =>
-        //   updateReservationStatus(
-        //     table.reservation_id,
-        //     reservationStatus,
-        //     abortController.signal
-        //   )
-        // )
         .then(() =>
           listReservations({ date: reservation_date }, abortController.signal)
         )
         .then(setReservations)
         .catch(setReservationsError);
-
-      // const reservationStatus = {
-      //   status: "finished",
-      // };
-
-      // updateReservationStatus(
-      //   table.reservation_id,
-      //   reservationStatus,
-      //   abortController.signal
-      // )
-      //   .then(() =>
-      //     listReservations({ date: reservation_date }, abortController.signal)
-      //   )
-      //   .then(setReservations)
-      //   .catch(setReservationsError);
     }
     return () => abortController.abort();
   };
@@ -132,48 +107,65 @@ function Dashboard() {
 
   return (
     <main>
-      <h1 className="text-center">Dashboard</h1>
-      <div className="d-flex justify-content-between">
-        <div>
-          <div className="d-md-flex justify-content-center mb-3">
-            <h3 className="mb-0">Reservations for {reservation_date}</h3>
-          </div>
-          <ErrorAlert error={reservationsError} />
-          <ul className="list-group my-2">
-            {reservations.map((reservation) => (
-              <ReservationItem
-                key={reservation.reservation_id}
-                reservation={reservation}
-                handleCancelButton={handleCancelButton}
-              />
-            ))}
-          </ul>
+      <div className="d-flex flex-column justify-content-around py-4">
+        <h1 className="text-center">Dashboard</h1>
+        <div className="date-div pt-1">
+          <h2 className="text-center">{reservation_date}</h2>
         </div>
-        <div>
-          <div className="d-md-flex justify-content-center mb-3">
-            <h3 className="mb-0">Tables</h3>
+        <div className="reservations-tables-div d-flex row justify-content-between px-5 py-5">
+          <div className="col">
+            <div className="d-md-flex justify-content-center mb-3">
+              <h3 className="mb-0">Reservations</h3>
+            </div>
+            <ErrorAlert error={reservationsError} />
+            <ul className="list-group my-2">
+              {reservations.map((reservation) => (
+                <ReservationItem
+                  key={reservation.reservation_id}
+                  reservation={reservation}
+                  handleCancelButton={handleCancelButton}
+                />
+              ))}
+            </ul>
           </div>
-          <ul className="list-group my-2">
-            {tables.map((table) => (
-              <TableItem
-                key={table.table_id}
-                table={table}
-                handleFinishButton={handleFinishButton}
-              />
-            ))}
-          </ul>
+          <div className="col">
+            <div className="d-md-flex justify-content-center mb-3">
+              <h3 className="mb-0">Tables</h3>
+            </div>
+            <ul className="list-group my-2">
+              {tables.map((table) => (
+                <TableItem
+                  key={table.table_id}
+                  table={table}
+                  handleFinishButton={handleFinishButton}
+                />
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
-      <div className="d-flex justify-content-center">
-        <button type="button" onClick={handleNextButton}>
-          Next
-        </button>
-        <button type="button" onClick={handlePreviousButton}>
-          Previous
-        </button>
-        <button type="button" onClick={handleTodayButton}>
-          Today
-        </button>
+        <div className="d-flex justify-content-center">
+          <button
+            type="button"
+            className="btn btn-secondary mx-1"
+            onClick={handlePreviousButton}
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary mx-1"
+            onClick={handleTodayButton}
+          >
+            Today
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary mx-1"
+            onClick={handleNextButton}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </main>
   );

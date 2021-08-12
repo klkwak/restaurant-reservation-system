@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { listReservations } from "../utils/api";
 import ReservationItem from "../dashboard/ReservationItem";
+import "./Search.css";
 
 function Search() {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -23,25 +24,30 @@ function Search() {
   };
 
   return (
-    <div>
+    <div className="container-fluid py-4">
       <div>
-        <h1>Search reservations by phone number</h1>
-        <form onSubmit={handleFormSubmit}>
-          <label htmlFor="mobile_number">
-            <input
-              name="mobile_number"
-              type="tel"
-              id="mobile_number"
-              placeholder="Enter a customer's phone number"
-              value={phoneNumber}
-              onChange={handleChange}
-              required
-            ></input>
-          </label>
-          <button type="submit">Find</button>
+        <h1 className="py-2">Search reservations by phone number</h1>
+        <form className="py-2 d-flex" onSubmit={handleFormSubmit}>
+          <div>
+            <label className="mobile_number_label" htmlFor="mobile_number">
+              <input
+                name="mobile_number"
+                type="tel"
+                id="mobile_number_search"
+                placeholder="Enter a customer's phone number"
+                value={phoneNumber}
+                onChange={handleChange}
+                required
+                className="form-control"
+              ></input>
+            </label>
+          </div>
+          <button className="btn btn-secondary mx-2 px-4" type="submit">
+            Find
+          </button>
         </form>
       </div>
-      <div>
+      <div className="py-2">
         {reservations.length > 0 ? (
           <ul className="list-group my-2">
             {reservations.map((reservation) => (
@@ -52,7 +58,9 @@ function Search() {
             ))}
           </ul>
         ) : (
-          <h2>No reservations found</h2>
+          <div className="alert alert-secondary w-50" role="alert">
+            No reservations found
+          </div>
         )}
       </div>
     </div>

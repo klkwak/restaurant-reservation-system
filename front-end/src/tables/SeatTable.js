@@ -88,25 +88,35 @@ function SeatTable() {
   };
 
   return (
-    <div>
+    <div className="container-fluid py-4">
+      <h1>Seat reservation at a table</h1>
       {errorMessages.map((error, index) => (
         <ErrorAlert key={index} error={error} />
       ))}
-      <form onSubmit={handleFormSubmit}>
-        <label htmlFor="table_id">
-          <select
-            name="table_id"
-            id="table_id"
-            onChange={handleTableChange}
-            value={tableId}
-          >
-            <option value="">Select a table</option>
-            {tableOptions}
-          </select>
-        </label>
+      <form onSubmit={handleFormSubmit} className="py-2">
+        <div className="form-group">
+          <label htmlFor="table_id">
+            <select
+              name="table_id"
+              id="table_id"
+              onChange={handleTableChange}
+              value={tableId}
+              className="form-control"
+            >
+              <option value="">Select a table</option>
+              {tableOptions}
+            </select>
+          </label>
+        </div>
         <div className="controls">
-          <button type="submit">Submit</button>
-          <button type="button" onClick={handleCancelButton}>
+          <button type="submit" className="btn btn-info mr-2">
+            Submit
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={handleCancelButton}
+          >
             Cancel
           </button>
         </div>

@@ -5,7 +5,6 @@ import { createTable } from "../utils/api";
 function NewTable() {
   const history = useHistory();
 
-  // Do I need this?
   const initialFormState = { table_name: "", capacity: "" };
 
   const [formData, setFormData] = useState({ ...initialFormState });
@@ -32,35 +31,50 @@ function NewTable() {
   };
 
   return (
-    <div>
+    <div className="container-fluid py-4">
+      <h1>Make a new table</h1>
       <form onSubmit={handleFormSubmit}>
-        <label htmlFor="table_name">
-          <input
-            name="table_name"
-            type="text"
-            id="table_name"
-            value={formData.table_name}
-            onChange={handleChange}
-            placeholder="Table Name"
-            minLength="2"
-            required
-          ></input>
-        </label>
-        <label htmlFor="capacity">
-          <input
-            name="capacity"
-            type="number"
-            id="capacity"
-            value={formData.capacity}
-            onChange={handleChange}
-            placeholder="Capacity"
-            min="1"
-            required
-          ></input>
-        </label>
+        <div className="form-group">
+          <label htmlFor="table_name">
+            Table Name
+            <input
+              name="table_name"
+              type="text"
+              id="table_name"
+              value={formData.table_name}
+              onChange={handleChange}
+              placeholder="Table Name"
+              minLength="2"
+              required
+              className="form-control"
+            ></input>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="capacity">
+            Table Capacity
+            <input
+              name="capacity"
+              type="number"
+              id="capacity"
+              value={formData.capacity}
+              onChange={handleChange}
+              placeholder="Capacity"
+              min="1"
+              required
+              className="form-control"
+            ></input>
+          </label>
+        </div>
         <div className="controls">
-          <button type="submit">Submit</button>
-          <button type="button" onClick={handleCancelButton}>
+          <button className="btn btn-info mr-2" type="submit">
+            Submit
+          </button>
+          <button
+            className="btn btn-secondary"
+            type="button"
+            onClick={handleCancelButton}
+          >
             Cancel
           </button>
         </div>

@@ -10,11 +10,11 @@ function EditReservation() {
   const history = useHistory();
 
   const initialFormState = {
-    first_name: "test_f_name",
-    last_name: "test_l_name",
-    mobile_number: "000-000-0000",
+    first_name: "",
+    last_name: "",
+    mobile_number: "",
     reservation_date: today(),
-    reservation_time: "00:00",
+    reservation_time: "",
     people: 1,
   };
 
@@ -131,8 +131,6 @@ function EditReservation() {
 
     setErrorMessages(errors);
 
-    // need to reload the dashboard reservations upon navigating back to it after updating
-
     if (errors.length === 0) {
       updateReservation(reservation_id, formData)
         .then(() =>
@@ -149,80 +147,111 @@ function EditReservation() {
   };
 
   return (
-    <div className="container">
+    <div className="container-fluid py-4">
+      <h1>Edit a reservation</h1>
       {errorMessages.map((error, index) => (
         <ErrorAlert key={index} error={error} />
       ))}
       <form onSubmit={handleFormSubmit}>
-        <label htmlFor="first_name">
-          <input
-            name="first_name"
-            type="text"
-            id="first_name"
-            value={formData.first_name}
-            onChange={handleChange}
-            placeholder="First Name"
-            required
-          ></input>
-        </label>
-        <label htmlFor="last_name">
-          <input
-            name="last_name"
-            type="text"
-            id="last_name"
-            value={formData.last_name}
-            onChange={handleChange}
-            placeholder="Last Name"
-            required
-          ></input>
-        </label>
-        <label htmlFor="mobile_number">
-          <input
-            name="mobile_number"
-            type="tel"
-            id="mobile_number"
-            value={formData.mobile_number}
-            onChange={handleChange}
-            placeholder="Mobile Number"
-            required
-          ></input>
-        </label>
-        <label htmlFor="reservation_date">
-          <input
-            name="reservation_date"
-            type="date"
-            id="reservation_date"
-            value={formData.reservation_date}
-            onChange={handleChange}
-            placeholder="Reservation Date"
-            required
-          ></input>
-        </label>
-        <label htmlFor="reservation_time">
-          <input
-            name="reservation_time"
-            type="time"
-            id="reservation_time"
-            value={formData.reservation_time}
-            onChange={handleChange}
-            placeholder="Reservation Time"
-            required
-          ></input>
-        </label>
-        <label htmlFor="people">
-          <input
-            name="people"
-            type="number"
-            id="people"
-            value={formData.people}
-            onChange={handleChange}
-            placeholder="People"
-            required
-          ></input>
-        </label>
+        <div className="form-group">
+          <label htmlFor="first_name">
+            First Name
+            <input
+              name="first_name"
+              type="text"
+              id="first_name_edit"
+              value={formData.first_name}
+              onChange={handleChange}
+              placeholder="First Name"
+              required
+              className="form-control"
+            ></input>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="last_name">
+            Last Name
+            <input
+              name="last_name"
+              type="text"
+              id="last_name_edit"
+              value={formData.last_name}
+              onChange={handleChange}
+              placeholder="Last Name"
+              required
+              className="form-control"
+            ></input>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="mobile_number">
+            Mobile Number
+            <input
+              name="mobile_number"
+              type="tel"
+              id="mobile_number_edit"
+              value={formData.mobile_number}
+              onChange={handleChange}
+              placeholder="Mobile Number"
+              required
+              className="form-control"
+            ></input>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="reservation_date">
+            Reservation Date
+            <input
+              name="reservation_date"
+              type="date"
+              id="reservation_date_edit"
+              value={formData.reservation_date}
+              onChange={handleChange}
+              placeholder="Reservation Date"
+              required
+              className="form-control"
+            ></input>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="reservation_time">
+            Reservation Time
+            <input
+              name="reservation_time"
+              type="time"
+              id="reservation_time_edit"
+              value={formData.reservation_time}
+              onChange={handleChange}
+              placeholder="Reservation Time"
+              required
+              className="form-control"
+            ></input>
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="people">
+            Party Size
+            <input
+              name="people"
+              type="number"
+              id="people_edit"
+              value={formData.people}
+              onChange={handleChange}
+              placeholder="People"
+              required
+              className="form-control"
+            ></input>
+          </label>
+        </div>
         <div className="controls">
-          <button type="submit">Submit</button>
-          <button type="button" onClick={handleCancelButton}>
+          <button className="btn btn-info mr-2" type="submit">
+            Submit
+          </button>
+          <button
+            className="btn btn-secondary"
+            type="button"
+            onClick={handleCancelButton}
+          >
             Cancel
           </button>
         </div>

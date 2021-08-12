@@ -1,4 +1,16 @@
 .side-bar {
-  background-color: #393a44;
+  background-color: #494d77;
   min-width: 200px;
+}
+
+#main-container > .row {
+  min-height: 100vh;
+}
+
+.flex-fill {
+  flex: 1 1 auto;
+}
+
+#main-view {
+  background-color: rgb(239, 233, 242);
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import "./TableItem.css";
 
 function TableItem({ table, handleFinishButton }) {
   let tableStatus = "Free";
@@ -8,7 +9,7 @@ function TableItem({ table, handleFinishButton }) {
     tableStatus = "Occupied";
     button = (
       <button
-        className="btn btn-danger"
+        className="btn btn-outline-danger finish-button my-2"
         onClick={() => handleFinishButton(table)}
         data-table-id-finish={table.table_id}
       >
@@ -18,15 +19,16 @@ function TableItem({ table, handleFinishButton }) {
   }
 
   return (
-    <li className="list-group-item d-flex">
-      <div className="d-flex justify-content-between pt-2">
-        <div className="px-3 border-right">
-          <h3>{table.table_name}</h3>
-        </div>
-        <div className="px-3">
-          <h4 data-table-id-status={table.table_id}>{tableStatus}</h4>
-        </div>
+    <li className="list-group-item d-flex flex-column">
+      <div className="p-2">
+        <h3 className="text-center">{table.table_name}</h3>
       </div>
+      <p className="p-2 text-center">
+        Capacity: <strong>{table.capacity}</strong>
+      </p>
+      <p className="p-2 text-center" data-table-id-status={table.table_id}>
+        Status: <strong>{tableStatus}</strong>
+      </p>
       {button}
     </li>
   );

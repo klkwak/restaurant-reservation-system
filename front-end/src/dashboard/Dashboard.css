@@ -1,0 +1,18 @@
+main {
+  height: 100%;
+}
+
+.date-div {
+  width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
+  background-color: #494d77;
+  color: white;
+}
+
+@media only screen and (max-width: 768px) {
+  /* .reservations-table-div {
+    flex-direction: column;
+  } */
+}
