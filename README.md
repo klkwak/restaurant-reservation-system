@@ -8,6 +8,8 @@ This project was built with JavaScript, React.js, HTML, CSS, Bootstrap, Node.js,
 
 This repository is set up as a monorepo, meaning that the frontend and backend projects are in one repository. 
 
+**:bulb: View the deployed app here:** https://res-res-frontend.herokuapp.com/
+
 ## Installation
 
 1. Clone this repository.
