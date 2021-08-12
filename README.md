@@ -103,6 +103,7 @@ All GET requests return a JSON response. All POST/PUT requests require an applic
 
 **Delete one table's reservation assignment**: `DELETE /tables/:table_id/seat`
 - Deletes one table's `reservation_id` (by reverting it to null) based on `table_id` parameter
+- Will also make PUT request to `/reservations/:reservation_id/status` to update reservation `status` to "finished"
 - Successful DELETE request will return JSON of the updated table
 
 ## Technology
