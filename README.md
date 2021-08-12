@@ -2,7 +2,7 @@
 
 ## Summary
 
-Periodic Tables is a full stack reservation system for fine dining restaurants. This software would be used internally by restaurant staff when a customer calls to request a reservation.
+Periodic Tables is a full stack reservation system for fine dining restaurants. This software would be used internally by restaurant staff to organize reservations and table seating. The user can enter reservations, cancel and adjust reservations, seat reservations at specific tables, change table status and look up reservations by phone number.
 
 This project was built with JavaScript, React.js, HTML, CSS, Bootstrap, Node.js, Express, and PostgreSQL. The API is RESTful and can execute all CRUDL operations.
 
