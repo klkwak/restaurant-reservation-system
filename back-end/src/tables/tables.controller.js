@@ -60,22 +60,6 @@ function tableNotOccupied(req, res, next) {
   next();
 }
 
-// async function reservationExists(req, res, next) {
-//   const { reservation_id } = req.body.data;
-
-//   const reservation = await readReservation(parseInt(reservation_id));
-
-//   if (!reservation) {
-//     next({
-//       status: 404,
-//       message: `reservation_id ${reservation_id} does not exist`,
-//     });
-//   }
-
-//   res.locals.reservation = reservation;
-//   next();
-// }
-
 function reservationNotLargerThanTableCapacity(req, res, next) {
   const { capacity } = res.locals.table;
 
