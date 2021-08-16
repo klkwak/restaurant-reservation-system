@@ -8,6 +8,8 @@ This project was built with JavaScript, React.js, HTML, CSS, Bootstrap, Node.js,
 
 This repository is set up as a monorepo, meaning that the frontend and backend projects are in one repository. 
 
+**:bulb: View the deployed app here:** https://res-res-frontend.herokuapp.com/
+
 ## Installation
 
 1. Clone this repository.
@@ -112,24 +114,30 @@ All GET requests return a JSON response. All POST/PUT requests require an applic
 
 **Backend**: Node.js, Express, PostgreSQL
 
-**Other tools used**: Jest, Postman, DBeaver, ElephantSQL, Knex
+**Other tools used**: Jest, Postman, DBeaver, ElephantSQL, Knex, Heroku
 
 ## Screenshots
 
 **Dashboard**
+
 <img width="1532" alt="Screen Shot 2021-08-12 at 6 38 01 PM" src="https://user-images.githubusercontent.com/73764394/129279036-30703b63-17cc-48ae-b276-d541e0d88fc9.png">
 
 **Create a reservation**
+
 <img width="1528" alt="Screen Shot 2021-08-12 at 6 39 02 PM" src="https://user-images.githubusercontent.com/73764394/129279057-6feb7762-6cc0-4c37-9992-f4a721d47709.png">
 
 **Create a table**
+
 <img width="1529" alt="Screen Shot 2021-08-12 at 6 39 11 PM" src="https://user-images.githubusercontent.com/73764394/129279077-9406d278-e120-4be2-9f44-b203f648d8e3.png">
 
 **Edit a reservation**
+
 <img width="1527" alt="Screen Shot 2021-08-12 at 6 39 25 PM" src="https://user-images.githubusercontent.com/73764394/129279086-e7b53b4d-f7e9-411d-9d4e-10bd4e408141.png">
 
 **Seat a reservation at a table**
+
 <img width="1526" alt="Screen Shot 2021-08-12 at 6 39 34 PM" src="https://user-images.githubusercontent.com/73764394/129279095-5664fd79-d7c0-47ec-b8a2-0b2318213f86.png">
 
 **Search reservations by phone number**
+
 <img width="1531" alt="Screen Shot 2021-08-12 at 6 38 47 PM" src="https://user-images.githubusercontent.com/73764394/129279111-916816f5-6f63-42b7-b78e-cf556c67c70f.png">
