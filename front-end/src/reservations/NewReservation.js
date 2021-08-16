@@ -122,13 +122,16 @@ function NewReservation() {
     setErrorMessages(errors);
 
     if (errors.length === 0) {
-      createReservation(formData)
+      const abortController = new AbortController();
+
+      createReservation(formData, abortController.signal)
         .then(() =>
           history.push(`/dashboard/?date=${formData.reservation_date}`)
         )
         .catch((err) => {
           console.error(err);
         });
+      return () => abortController.abort();
     }
   };
 

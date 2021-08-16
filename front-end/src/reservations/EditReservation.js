@@ -132,13 +132,16 @@ function EditReservation() {
     setErrorMessages(errors);
 
     if (errors.length === 0) {
-      updateReservation(reservation_id, formData)
+      const abortController = new AbortController();
+
+      updateReservation(reservation_id, formData, abortController.signal)
         .then(() =>
           history.push(`/dashboard/?date=${formData.reservation_date}`)
         )
         .catch((err) => {
           console.error(err);
         });
+      return () => abortController.abort();
     }
   };
 

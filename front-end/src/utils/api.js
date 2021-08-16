@@ -76,17 +76,17 @@ export async function readReservation(reservation_id, signal) {
     .then(formatReservationTime);
 }
 
-export async function createReservation(data) {
+export async function createReservation(data, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
 
   return await fetchJson(
     url,
-    { headers, method: "POST", body: JSON.stringify({ data }) },
+    { headers, method: "POST", body: JSON.stringify({ data }), signal },
     []
   );
 }
 
-export async function updateReservation(reservation_id, data) {
+export async function updateReservation(reservation_id, data, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`);
 
   return await fetchJson(
@@ -95,6 +95,7 @@ export async function updateReservation(reservation_id, data) {
       headers,
       method: "PUT",
       body: JSON.stringify({ data }),
+      signal,
     },
     []
   );
@@ -106,12 +107,12 @@ export async function listTables(signal) {
   return await fetchJson(url, { headers, signal }, []);
 }
 
-export async function createTable(data) {
+export async function createTable(data, signal) {
   const url = new URL(`${API_BASE_URL}/tables`);
 
   return await fetchJson(
     url,
-    { headers, method: "POST", body: JSON.stringify({ data }) },
+    { headers, method: "POST", body: JSON.stringify({ data }), signal },
     []
   );
 }
